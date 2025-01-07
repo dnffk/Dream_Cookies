@@ -1,14 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class TouchManager : MonoBehaviour
+public class TouchManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private float moveSpeed = 0.001f;
 
     void Start()
     {
 
+    }
+
+    public void OnPointerDown(PointerEventData data)
+    {
+        Debug.Log("------Touch Start------");
+    }
+
+    public void OnPointerUp(PointerEventData data)
+    {
+        Debug.Log("------Touch End------");
     }
 
     void Update()
