@@ -22,5 +22,7 @@ public class NextButtonManager : MonoBehaviour
     public void OnButtonClicked() // 버튼 클릭 한 번(Lerp 한 번 호출) 만으로 원하는 위치까지 선형보간으로 이동할 수 없기에 Update문을 사용해서 여러 번 누적 호출
     {
         targetPos = MainCamera.transform.position + new Vector3(20f, 0f, 0f);
+
+        gameObject.SetActive(false);
     }
 }

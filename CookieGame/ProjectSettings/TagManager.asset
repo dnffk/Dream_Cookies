@@ -8,11 +8,17 @@ TagManager:
   - Choco powder
   - Green tea powder
   - Bowl
+  - Egg
+  - Butter
+  - Salt
+  - Powder
+  - Flour
+  - Sugar
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - CookieMakePlace
   - Water
   - UI
   - 
