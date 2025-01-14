@@ -6,28 +6,25 @@ using TMPro;
 public class DoughManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Bowl2D bowl;
-    [SerializeField] private ItemPickManager itemPick;
-    [SerializeField] private TMP_Text instruction;
-    [SerializeField] private GameObject nextButton;
+    [SerializeField] private Bowl2D bowl; // Bowl 스크립트 ( 충돌 감지 )
+    [SerializeField] private ItemPickManager itemPick; // item Pick Up 스크립트
+    [SerializeField] private TMP_Text request; // 지시 사항 출력 텍스트
+    [SerializeField] private GameObject nextButton; // 장면 전환 버튼
 
     [Header("Mix Settings")]
-    [SerializeField] private float requiredMixTime = 3f;
-    private float currentMixTime = 0f;
+    [SerializeField] private float reqMixTime = 3f; // 요구 Mix 시간
+    private float currentMixTime = 0f; // 진행 중인 Mix 시간
 
-    // 현재 반죽 단계
-    public DoughState currentState = DoughState.AddButterSugar;
+    public DoughState currentState = DoughState.AddButterSugar; // enum을 사용해 현재 반죽 단계 지정, 초기 단계
 
-    // Bowl 위 터치 판별
-    private bool isBowlTouchStarted = false;
+    private bool isBowlTouchStarted = false; // Bowl 위에서 터치가 시작되었는지
 
     void Start()
     {
-        if (instruction) instruction.text = "Butter, Sugar Add";
-        if (nextButton) nextButton.SetActive(false);
+        if (request) request.text = "Butter, Sugar Add";
+        if (nextButton) nextButton.SetActive(false); // 장면 전환 버튼 비활
 
-        // **Add** 단계이므로, 아이템 드래그 기능 켜두기
-        if (itemPick) itemPick.gameObject.SetActive(true);
+        if (itemPick) itemPick.gameObject.SetActive(true); // itemPick 스크립트 활성화
     }
 
     void Update()
@@ -35,29 +32,24 @@ public class DoughManager : MonoBehaviour
         switch (currentState)
         {
             case DoughState.AddButterSugar:
-                // 재료 충분?
-                if (bowl.HasItem("Butter") && bowl.HasItem("Sugar"))
+                if (bowl.HasItem("Butter") && bowl.HasItem("Sugar")) // 해당 태그를 가진 오브젝트를 가지고 있나?
                 {
-                    // 이제 섞기 단계로 전환
-                    currentState = DoughState.MixButterSugar;
-                    if (instruction) instruction.text = "Good\nMixButterSugar (3sec)";
-                    currentMixTime = 0f;
-
-                    // 재료 넣기가 끝났으니 아이템 드래그 비활성
-                    if (itemPick) itemPick.gameObject.SetActive(false);
+                    currentState = DoughState.MixButterSugar; // 가지고 있다면 MIx 단계로
+                    if (request) request.text = "Good\nMixButterSugar (3sec)"; // 지시 사항 Mix로 변경 ,필요한 시간 출력
+                    if (itemPick) itemPick.gameObject.SetActive(false); // Mix 과정 중에서는 item 옮길 수 없도록 스크립트 비활성화
+                    
+                    currentMixTime = 0f; // 현재 Mix된 시간
                 }
                 break;
 
             case DoughState.MixButterSugar:
                 if (IsMixingOverTime())
                 {
-                    // 섞기 완료 → 다음 단계
                     currentState = DoughState.AddEggSalt;
-                    if (instruction) instruction.text = "Now add Egg, Salt";
-                    currentMixTime = 0f;
+                    if (request) request.text = "Now add Egg, Salt";
+                    if (itemPick) itemPick.gameObject.SetActive(true); // Add 단계로 들어갈 때 item pick 재활성화
 
-                    // 다음 'Add' 단계 시작이므로 아이템 드래그 다시 활성
-                    if (itemPick) itemPick.gameObject.SetActive(true);
+                    currentMixTime = 0f;
                 }
                 break;
 
@@ -65,11 +57,10 @@ public class DoughManager : MonoBehaviour
                 if (bowl.HasItem("Egg") && bowl.HasItem("Salt"))
                 {
                     currentState = DoughState.MixEggSalt;
-                    if (instruction) instruction.text = "Good\nMixEggSalt (3sec)";
-                    currentMixTime = 0f;
-
-                    // 재료 넣기 끝 → 드래그 비활성
+                    if (request) request.text = "Good\nMixEggSalt (3sec)";
                     if (itemPick) itemPick.gameObject.SetActive(false);
+
+                    currentMixTime = 0f;
                 }
                 break;
 
@@ -77,11 +68,10 @@ public class DoughManager : MonoBehaviour
                 if (IsMixingOverTime())
                 {
                     currentState = DoughState.AddPowderFlourPlus;
-                    if (instruction) instruction.text = "Good\nAdd Flour + Powder + SpecialPowder";
-                    currentMixTime = 0f;
-
-                    // 다음 Add 단계 → 드래그 활성
+                    if (request) request.text = "Good\nAdd FlourPowderSpecialPowder";
                     if (itemPick) itemPick.gameObject.SetActive(true);
+
+                    currentMixTime = 0f;
                 }
                 break;
 
@@ -89,39 +79,35 @@ public class DoughManager : MonoBehaviour
                 if (bowl.HasItem("Flour") && bowl.HasItem("Powder") && CheckAnyOnePowder())
                 {
                     currentState = DoughState.MixPowderFlourPlus;
-                    if (instruction) instruction.text = "LastMix (3sec)\nLet's Go";
-                    currentMixTime = 0f;
-
-                    // 재료 넣기 완료 → 드래그 비활성
+                    if (request) request.text = "Good\nLastMix (3sec)";
                     if (itemPick) itemPick.gameObject.SetActive(false);
+
+                    currentMixTime = 0f;
                 }
                 break;
 
             case DoughState.MixPowderFlourPlus:
                 if (IsMixingOverTime())
                 {
-                    if (instruction) instruction.text = "You Win!";
+                    if (request) request.text = "You Win!";
                     currentState = DoughState.Finished;
 
                     if (nextButton) nextButton.SetActive(true);
-
-                    // 모든 반죽 끝나면 굳이 아이템 드래그 활성 안 해도 됨
                 }
                 break;
 
             case DoughState.Finished:
-                // do nothing
+                if (itemPick) itemPick.gameObject.SetActive(true);
                 break;
         }
     }
 
     private bool IsMixingOverTime()
     {
-        // Bowl 위에서 드래그 확인
         if (IsDraggingOnBowl())
         {
             currentMixTime += Time.deltaTime;
-            if (currentMixTime >= requiredMixTime)
+            if (currentMixTime >= reqMixTime)
             {
                 return true; // 섞기 완료
             }
