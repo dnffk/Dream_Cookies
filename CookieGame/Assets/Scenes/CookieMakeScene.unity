@@ -241,7 +241,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: -0.08, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.4
 --- !u!1 &153779737
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,9 +689,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.000000029802322}
+  m_Offset: {x: 0, y: 0.33}
   serializedVersion: 2
-  m_Radius: 1.15
+  m_Radius: 0.5
 --- !u!50 &382118785
 Rigidbody2D:
   serializedVersion: 4
@@ -731,7 +731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b655454bdceb8e4780142f924e70ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPick: {fileID: 1319730369}
+  itemsInBowl: []
 --- !u!1 &428276996
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,7 +935,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.75
+  m_Radius: 0.4
 --- !u!1 &522560857
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,7 +1221,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.024591208, y: -0.15268052}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1232,7 +1232,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.72, y: 2.27}
+  m_Size: {x: 0.63798785, y: 0.97808826}
   m_EdgeRadius: 0
 --- !u!1 &591436816
 GameObject:
@@ -1437,7 +1437,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: -0.08, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.4
 --- !u!1 &745818066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1855,7 +1855,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.031500995, y: -0.29400837}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1866,7 +1866,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.14, y: 2.98}
+  m_Size: {x: 0.8169614, y: 0.9219401}
   m_EdgeRadius: 0
 --- !u!1 &989114395
 GameObject:
@@ -1985,7 +1985,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.031500995, y: -0.29400837}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1996,7 +1996,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.14, y: 2.98}
+  m_Size: {x: 0.8169614, y: 0.9219401}
   m_EdgeRadius: 0
 --- !u!1 &1127955630
 GameObject:
@@ -2115,7 +2115,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.06680727, y: 0.007350892}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2126,7 +2126,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.2, y: 2}
+  m_Size: {x: 0.9677758, y: 0.5739433}
   m_EdgeRadius: 0
 --- !u!1 &1132888731
 GameObject:
@@ -2505,7 +2505,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.010281742, y: -0.04249665}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2516,7 +2516,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.02, y: 2.53}
+  m_Size: {x: 0.847909, y: 1.127604}
   m_EdgeRadius: 0
 --- !u!1 &1236875330
 GameObject:
@@ -2867,10 +2867,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca57da7af005db746b0b41e5fca85224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDragging: 0
   pickupScale: 1.2
   moveSpeed: 10
-  zDistance: 5
 --- !u!4 &1319730370
 Transform:
   m_ObjectHideFlags: 0
@@ -3526,7 +3524,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1606456108}
   - component: {fileID: 1606456110}
-  - component: {fileID: 1606456112}
+  - component: {fileID: 1606456113}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3563,7 +3561,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 1171406233}
   moveSpeed: 1.3
---- !u!114 &1606456112
+--- !u!114 &1606456113
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3572,15 +3570,52 @@ MonoBehaviour:
   m_GameObject: {fileID: 1606456107}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3edbff084997be94fa1331e0a18f18f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 93a11f37814b393408c05200820c76db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bowl: {fileID: 382118786}
   itemPick: {fileID: 1319730369}
-  request: {fileID: 1685689066}
+  requestText: {fileID: 1685689066}
   nextButton: {fileID: 745818066}
-  reqMixTime: 3
-  currentState: 0
+  steps:
+  - requiredTags:
+    - Butter
+    - Sugar
+    instruction: "\uBC84\uD130\uC640 \uC124\uD0D5\uC744 \uB123\uC5B4\uC8FC\uC138\uC694"
+    isMixStep: 0
+    mixTime: 0
+    nextStepIndex: 1
+  - requiredTags: []
+    instruction: "\uBC84\uD130\uC640 \uC124\uD0D5\uC744 \uC11E\uC5B4\uC8FC\uC138\uC694"
+    isMixStep: 1
+    mixTime: 3
+    nextStepIndex: 2
+  - requiredTags:
+    - Egg
+    - Salt
+    instruction: "\uACC4\uB780\uACFC \uC18C\uAE08\uC744 \uB123\uC5B4\uC8FC\uC138\uC694"
+    isMixStep: 0
+    mixTime: 0
+    nextStepIndex: 3
+  - requiredTags: []
+    instruction: "\uACC4\uB780\uACFC \uC18C\uAE08\uC744 \uC11E\uC5B4\uC8FC\uC138\uC694"
+    isMixStep: 1
+    mixTime: 3
+    nextStepIndex: 4
+  - requiredTags:
+    - Powder
+    - Flour
+    - Strawberry powder
+    instruction: "\uBCA0\uC774\uD0B9 \uD30C\uC6B0\uB354, \uBC00\uAC00\uB8E8, \uACFC\uC77C
+      \uD30C\uC6B0\uB354\uB97C \uB123\uC5B4\uC8FC\uC138\uC694"
+    isMixStep: 0
+    mixTime: 0
+    nextStepIndex: 5
+  - requiredTags: []
+    instruction: "\uB9C8\uC9C0\uB9C9\uC73C\uB85C \uC11E\uC5B4\uC8FC\uC138\uC694"
+    isMixStep: 1
+    mixTime: 3
+    nextStepIndex: 6
 --- !u!1 &1630485405
 GameObject:
   m_ObjectHideFlags: 0
@@ -3671,14 +3706,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8ba4e82f5c653b94bb3168550498a0ac, type: 2}
+  m_sharedMaterial: {fileID: -3236261705774282284, guid: 8ba4e82f5c653b94bb3168550498a0ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190335
   m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -3702,7 +3737,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -3865,7 +3900,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: -0.08, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.4
 --- !u!1 &1852613286
 GameObject:
   m_ObjectHideFlags: 0
