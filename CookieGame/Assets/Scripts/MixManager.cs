@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class MixManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MixManager : MonoBehaviour
     [SerializeField] private ItemPickManager itemPick; // 아이템 픽업 스크립트
     [SerializeField] private TMP_Text requestText;     // 지시 사항 출력할 텍스트
     [SerializeField] private GameObject nextButton;    // 장면 전환 버튼
+    [SerializeField] private Slider slider;
 
     [Header("Steps Settings")]
     [SerializeField] private List<MixStep> steps;    // 단계를 Inspector에서 세팅
@@ -17,57 +19,66 @@ public class MixManager : MonoBehaviour
     private int currentStepIndex = 0;                  // 현재 단계 인덱스
     private float currentMixTime = 0f;                 // 현재 단계에서 누적된 섞기 시간
     private bool isBowlTouchStarted = false;           // Bowl 위에서 터치가 시작되었는지
+    private float outbowlTime = 0f;
+    private float outbowlyesTime = 1f;
 
     private void Start()
     {
-        // steps[0]에서 가져옴
-        if (steps != null && steps.Count > 0)
+        if (steps != null && steps.Count > 0) // steps[0]에서 가져옴
         {
             requestText.text = steps[currentStepIndex].instruction;
         }
 
-        // nextButton 비활성화
-        if (nextButton) nextButton.SetActive(false);
+        if (nextButton) nextButton.SetActive(false);  // nextButton 비활성화
+
+        slider.value = 0f;
+        slider.gameObject.SetActive(false);
     }
 
     private void Update()
     {
         if (currentStepIndex >= steps.Count)
         {
-            // 모든 단계가 끝나면 더 이상 진행하지 않음
             return;
         }
 
         var step = steps[currentStepIndex];
 
-        // 섞기 단계
         if (step.isMixStep)
         {
-            // 섞기 단계가 필요한 경우
+            if (!slider.gameObject.activeSelf)
+            {
+                slider.gameObject.SetActive(true);
+            }
+
             if (IsMixingOverTime(step.mixTime))
             {
                 GoToNextStep();
             }
+
+            ProgressBar(step.mixTime);
         }
         else
         {
-            // 재료 추가 단계
+            if (slider.gameObject.activeSelf)
+            {
+                slider.gameObject.SetActive(false);
+            }
+
             if (CheckAllRequiredItems(step.requiredTags))
             {// requiredTags의 모든 아이템이 Bowl에 들어왔는지 확인
                 DestroyItems(step.requiredTags.ToArray());  // Bowl 안에 있는 해당 태그 아이템들 파괴
-
-                // 다음 단계로
                 GoToNextStep();
             }
         }
     }
 
     private void GoToNextStep()
-    {
-        // 다음 단계 인덱스를 steps에서 가져오기
+    {// 진짜 개복잡하네 대가리터지긋다
+        // 다음 단계 인덱스를 steps 에서 가져온다
         int nextIndex = steps[currentStepIndex].nextStepIndex;
 
-        currentStepIndex = nextIndex;  // 현재 단계 인덱스 갱신
+        currentStepIndex = nextIndex;
 
         if (currentStepIndex >= steps.Count) // 다음 단계 인덱스가 steps 범위를 벗어난 경우
         {
@@ -77,11 +88,9 @@ public class MixManager : MonoBehaviour
             return;
         }
 
-        // 텍스트 갱신
         var step = steps[currentStepIndex];
         if (requestText) requestText.text = step.instruction;
 
-        // 믹싱 단계 들어갈 때는 ItemPick 비활성화, 재료 추가 단계 들어갈 때는 활성화
         if (step.isMixStep)
         {
             if (itemPick) itemPick.gameObject.SetActive(false);
@@ -97,11 +106,22 @@ public class MixManager : MonoBehaviour
     {
         foreach (var tagName in requiredTags) // requiredTags 중 하나라도 Bowl에 없으면 false
         {
-            // 특수 파우더 처리 필요
-
             if (!bowl.HasItem(tagName))
             {
                 return false;
+            }
+
+            if (tagName == "Strawberry powder")
+            {
+                CheckItemManager.Instance.UseItem(0);
+            }
+            else if (tagName == "Choco powder")
+            {
+                CheckItemManager.Instance.UseItem(1);
+            }
+            else if(tagName == "Green tea powder")
+            {
+                CheckItemManager.Instance.UseItem(2);
             }
         }
         return true;
@@ -112,6 +132,9 @@ public class MixManager : MonoBehaviour
         if (IsDraggingOnBowl())
         {
             currentMixTime += Time.deltaTime;
+
+            outbowlTime = 0f;
+
             if (currentMixTime >= reqTime)
             {
                 return true; // 섞기 완료
@@ -119,7 +142,12 @@ public class MixManager : MonoBehaviour
         }
         else
         {
-            currentMixTime = 0f;
+            outbowlTime += Time.deltaTime;
+
+            if(outbowlTime > outbowlyesTime)
+            {
+                currentMixTime = 0f;
+            }
         }
         return false;
     }
@@ -177,10 +205,19 @@ public class MixManager : MonoBehaviour
 
         foreach (var itemObj in foundItems)
         {
-            // Bowl 리스트에서 제거
             bowl.itemsInBowl.Remove(itemObj);
             // 오브젝트 파괴
             Destroy(itemObj);
+        }
+    }
+
+    private void ProgressBar(float reqTime)
+    {
+        slider.value = currentMixTime / reqTime;
+
+        if(slider.value >= 1)
+        {
+            slider.gameObject.SetActive(false);
         }
     }
 }
