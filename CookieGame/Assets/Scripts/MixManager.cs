@@ -11,7 +11,7 @@ public class MixManager : MonoBehaviour
     [SerializeField] private ItemPickManager itemPick; // 아이템 픽업 스크립트
     [SerializeField] private TMP_Text requestText;     // 지시 사항 출력할 텍스트
     [SerializeField] private GameObject nextButton;    // 장면 전환 버튼
-    [SerializeField] private Slider slider;
+    [SerializeField] private Slider slider;    // progressbar
 
     [Header("Steps Settings")]
     [SerializeField] private List<MixStep> steps;    // 단계를 Inspector에서 세팅
@@ -28,8 +28,6 @@ public class MixManager : MonoBehaviour
         {
             requestText.text = steps[currentStepIndex].instruction;
         }
-
-        if (nextButton) nextButton.SetActive(false);  // nextButton 비활성화
 
         slider.value = 0f;
         slider.gameObject.SetActive(false);
@@ -82,7 +80,7 @@ public class MixManager : MonoBehaviour
 
         if (currentStepIndex >= steps.Count) // 다음 단계 인덱스가 steps 범위를 벗어난 경우
         {
-            if (requestText) requestText.text = "You Win!";
+            if (requestText) requestText.text = "";
             if (nextButton) nextButton.SetActive(true);
             if (itemPick) itemPick.gameObject.SetActive(true);
             return;
@@ -104,27 +102,47 @@ public class MixManager : MonoBehaviour
 
     private bool CheckAllRequiredItems(List<string> requiredTags)
     {
-        foreach (var tagName in requiredTags) // requiredTags 중 하나라도 Bowl에 없으면 false
+        var step = steps[currentStepIndex];
+
+        if (step.isLastStep)
         {
-            if (!bowl.HasItem(tagName))
+            bool hasStrawberry = bowl.HasItem("Strawberry powder");
+            bool hasChoco = bowl.HasItem("Choco powder");
+            bool hasGreenTea = bowl.HasItem("Green tea powder");
+
+            if (bowl.HasItem("Flour") && bowl.HasItem("Powder") && (hasStrawberry || hasChoco || hasGreenTea))
+            {
+                if (hasStrawberry)
+                {
+                    CheckItemManager.Instance.UseItem(0);
+                }
+                else if (hasChoco)
+                {
+                    CheckItemManager.Instance.UseItem(1);
+                }
+                else if (hasGreenTea)
+                {
+                    CheckItemManager.Instance.UseItem(2);
+                }
+
+                return true;
+            }
+            else
             {
                 return false;
             }
-
-            if (tagName == "Strawberry powder")
-            {
-                CheckItemManager.Instance.UseItem(0);
-            }
-            else if (tagName == "Choco powder")
-            {
-                CheckItemManager.Instance.UseItem(1);
-            }
-            else if(tagName == "Green tea powder")
-            {
-                CheckItemManager.Instance.UseItem(2);
-            }
         }
-        return true;
+        else
+        {
+            foreach (var tagName in requiredTags)
+            {
+                if (!bowl.HasItem(tagName))
+                {
+                    return false; // 하나라도 없으면 실패
+                }
+            }
+            return true;
+        }
     }
 
     private bool IsMixingOverTime(float reqTime)

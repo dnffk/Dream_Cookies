@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+[System.Serializable] // 인스펙터에서 변수를 다룰 수 있도록 해주는 코드
 public struct MixStep
 {
     [Tooltip("그릇 안에 추가되어야 할 태그")]
@@ -12,6 +12,9 @@ public struct MixStep
 
     [Tooltip("이 단계가 섞기 단계인지?")]
     public bool isMixStep;
+
+    [Tooltip("이 단계가 마지막 재료 수집 단계인지?")]
+    public bool isLastStep;
 
     [Tooltip("섞기에 필요한 시간(초). Add단계엔 0")]
     public float mixTime;

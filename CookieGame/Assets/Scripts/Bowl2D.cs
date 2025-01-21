@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Bowl2D : MonoBehaviour
 {
-    // Bowl 내부 아이템 저장하는 list
-    public List<GameObject> itemsInBowl = new List<GameObject>();
+    public List<GameObject> itemsInBowl = new List<GameObject>(); // Bowl 내부 아이템 저장하는 list
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!itemsInBowl.Contains(other.gameObject)) // 감지된 item이 list에 추가되지 않은 item일 경우
@@ -14,7 +13,7 @@ public class Bowl2D : MonoBehaviour
         }
     }
 
-    // 특정 태그를 가진 아이템이 Bowl 안에 있는지?
+    // 특정 태그를 가진 아이템이 특정 오브젝트와 닿아 있는지?
     public bool HasItem(string tagName)
     {
         foreach (var item in itemsInBowl) // itemInBowl list내에 있는 아이템들 중
