@@ -4,75 +4,42 @@ using UnityEngine;
 
 public class RollingManager : MonoBehaviour
 {
-    [SerializeField] private Transform dough;
-    [SerializeField] private float scaleFactor = 0.001f;
+    [SerializeField] private Transform dough; // 변경시킬 반죽 오브젝트
+    [SerializeField] private float scaleFactor = 0.001f; // 스케일 변경 비율\
+    [SerializeField] public Dough2D dough2d;
 
-    private bool isCollidedPin = false;
-    private bool isTouchRolling = false;
-    private Vector2 lastTouchPos;
+    private Vector2 lastTouchPos; // 최종 pos
 
-    void Start()
-    {
-        isCollidedPin = false;
-    }
     void Update()
     {
-        if(Input.touchCount > 0)
+        if (dough2d.isCollidedPin) // Rolling pin과 Dough가 닿아(충돌)있는 경우
         {
-            Touch t = Input.GetTouch(0);
-
-            if (t.phase == TouchPhase.Began)
+            if (Input.touchCount > 0) // 터치 입력이 있는 경우
             {
-                if (isTouchRolling && isCollidedPin)
+                Touch t = Input.GetTouch(0); // 0번 터치 입력 t ( 첫 번째 터치 입력 )
+
+                if (t.phase == TouchPhase.Began) // 터치가 시작된 경우
                 {
-                    lastTouchPos = t.position;
+                    lastTouchPos = t.position; // 처음 터치 입력 pos 저장
+                }
+                else if (t.phase == TouchPhase.Moved) // 드래그 중인 경우
+                {
+                    float distance = t.deltaPosition.magnitude;
+                    //Vector2 currentPos = t.position; // t의 위치를 Vector2로 저장
+                    //float distance = (currentPos - lastTouchPos).magnitude; // 이동거리 계산 (벡터 길이 계산)
+
+                    Vector2 newScale = dough.localScale; // dought의 기존 크키를 newScale로 저장 (벡터)
+                    newScale.x += distance * scaleFactor; // 이동거리 * scaleFactor 만큼 크기 변화 (x축)
+                    newScale.y += distance * scaleFactor / 0.5f; // 이동거리 * scaleFactor / 0.5f 만큼 크기 변화 (y축)
+
+                    newScale.x = Mathf.Clamp(newScale.x, 1.3f, 3f);
+                    newScale.y = Mathf.Clamp(newScale.y, 1.0f, 2f);
+
+                    dough.localScale = newScale;
+
+                    //lastTouchPos = currentPos;
                 }
             }
-            else if (t.phase == TouchPhase.Moved)
-            {
-                Vector2 currentPos = t.position;
-                float distance = (currentPos - lastTouchPos).magnitude;
-
-                Vector2 newScale = dough.localScale;
-                newScale.x += distance * scaleFactor;
-                newScale.y += distance * scaleFactor / 2f;
-
-                newScale.x = Mathf.Clamp(newScale.x, 0.5f, 3f);
-                newScale.y = Mathf.Clamp(newScale.y, 0.3f, 1f);
-
-                dough.localScale = newScale;
-
-                lastTouchPos = currentPos;
-            }
-        }
-    }
-
-    private bool IsTouchOnRollingpin(Touch t)
-    {
-        Vector2 worldPos = Camera.main.ScreenToWorldPoint(t.position);
-        RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
-        if (hit.collider != null && hit.collider.CompareTag("Rolling pin"))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Rolling pin"))
-        {
-            isCollidedPin = true;
-            Debug.Log("isCollidedPin" + isCollidedPin);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if(other.CompareTag("Rolling pin"))
-        {
-            isCollidedPin = false;
-            Debug.Log("isCollidedPin" + isCollidedPin);
         }
     }
 }
