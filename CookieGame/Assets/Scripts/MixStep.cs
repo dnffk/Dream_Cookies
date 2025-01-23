@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable] // 인스펙터에서 변수를 다룰 수 있도록 해주는 코드
+[System.Serializable]
 public struct MixStep
 {
     [Tooltip("그릇 안에 추가되어야 할 태그")]

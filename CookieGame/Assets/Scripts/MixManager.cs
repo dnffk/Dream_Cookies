@@ -11,6 +11,7 @@ public class MixManager : MonoBehaviour
     [SerializeField] private ItemPickManager itemPick; // 아이템 픽업 스크립트
     [SerializeField] private TMP_Text requestText;     // 지시 사항 출력할 텍스트
     [SerializeField] private GameObject nextButton;    // 장면 전환 버튼
+    [SerializeField] private float down = 1f;
     [SerializeField] private Slider slider;    // progressbar
 
     [Header("Steps Settings")]
@@ -19,8 +20,6 @@ public class MixManager : MonoBehaviour
     private int currentStepIndex = 0;                  // 현재 단계 인덱스
     private float currentMixTime = 0f;                 // 현재 단계에서 누적된 섞기 시간
     private bool isBowlTouchStarted = false;           // Bowl 위에서 터치가 시작되었는지
-    private float outbowlTime = 0f;
-    private float outbowlyesTime = 1f;
 
     private void Start()
     {
@@ -58,13 +57,13 @@ public class MixManager : MonoBehaviour
         }
         else
         {
-            if (slider.gameObject.activeSelf)
-            {
-                slider.gameObject.SetActive(false);
-            }
+            //if (slider.gameObject.activeSelf)
+            //{
+            //    slider.gameObject.SetActive(false);
+            //}
 
             if (CheckAllRequiredItems(step.requiredTags))
-            {// requiredTags의 모든 아이템이 Bowl에 들어왔는지 확인
+            {
                 DestroyItems(step.requiredTags.ToArray());  // Bowl 안에 있는 해당 태그 아이템들 파괴
                 GoToNextStep();
             }
@@ -151,21 +150,15 @@ public class MixManager : MonoBehaviour
         {
             currentMixTime += Time.deltaTime;
 
-            outbowlTime = 0f;
-
             if (currentMixTime >= reqTime)
             {
-                return true; // 섞기 완료
+                return true;
             }
         }
         else
         {
-            outbowlTime += Time.deltaTime;
-
-            if(outbowlTime > outbowlyesTime)
-            {
-                currentMixTime = 0f;
-            }
+            currentMixTime -= down * Time.deltaTime;
+            currentMixTime = Mathf.Max(currentMixTime, 0f);
         }
         return false;
     }

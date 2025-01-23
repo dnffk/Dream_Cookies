@@ -1721,7 +1721,7 @@ Transform:
   m_GameObject: {fileID: 906464981}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.956648, y: 3.4637103, z: -1.5}
+  m_LocalPosition: {x: 19.956648, y: 3.4637103, z: -2}
   m_LocalScale: {x: 4.667219, y: 4.7961636, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3096,7 +3096,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 1, g: 0.28773582, b: 0.28773582, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -3790,6 +3790,7 @@ MonoBehaviour:
   itemPick: {fileID: 1319730369}
   requestText: {fileID: 1685689066}
   nextButton: {fileID: 745818066}
+  down: 1
   slider: {fileID: 1361534541}
   steps:
   - requiredTags:

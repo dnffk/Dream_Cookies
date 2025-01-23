@@ -26,6 +26,5 @@ public class CheckItemManager : MonoBehaviour
     public void UseItem(int index)
     {
         itemUsed[index] = true;
-        Debug.Log(index + ":" + itemUsed[index]);
     }
 }

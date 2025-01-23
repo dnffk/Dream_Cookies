@@ -25,8 +25,6 @@ public class RollingManager : MonoBehaviour
                 else if (t.phase == TouchPhase.Moved) // 드래그 중인 경우
                 {
                     float distance = t.deltaPosition.magnitude;
-                    //Vector2 currentPos = t.position; // t의 위치를 Vector2로 저장
-                    //float distance = (currentPos - lastTouchPos).magnitude; // 이동거리 계산 (벡터 길이 계산)
 
                     Vector2 newScale = dough.localScale; // dought의 기존 크키를 newScale로 저장 (벡터)
                     newScale.x += distance * scaleFactor; // 이동거리 * scaleFactor 만큼 크기 변화 (x축)
