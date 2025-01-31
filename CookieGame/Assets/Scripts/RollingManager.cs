@@ -7,6 +7,9 @@ public class RollingManager : MonoBehaviour
     [SerializeField] private Transform dough; // 변경시킬 반죽 오브젝트
     [SerializeField] private float scaleFactor = 0.001f; // 스케일 변경 비율\
     [SerializeField] public Dough2D dough2d;
+    [SerializeField] private GameObject nextButton;    // 장면 전환 버튼
+    public GameObject rollingPin;
+    public GameObject shape;
 
     private Vector2 lastTouchPos; // 최종 pos
 
@@ -30,12 +33,17 @@ public class RollingManager : MonoBehaviour
                     newScale.x += distance * scaleFactor; // 이동거리 * scaleFactor 만큼 크기 변화 (x축)
                     newScale.y += distance * scaleFactor / 0.5f; // 이동거리 * scaleFactor / 0.5f 만큼 크기 변화 (y축)
 
-                    newScale.x = Mathf.Clamp(newScale.x, 1.3f, 3f);
-                    newScale.y = Mathf.Clamp(newScale.y, 1.0f, 2f);
+                    newScale.x = Mathf.Clamp(newScale.x, 1.3f, 5f);
+                    newScale.y = Mathf.Clamp(newScale.y, 1.0f, 3.7f);
 
                     dough.localScale = newScale;
 
-                    //lastTouchPos = currentPos;
+                    if (Mathf.Approximately(newScale.x, 5f)
+                        && Mathf.Approximately(newScale.y, 3.7f))
+                    {
+                        rollingPin.SetActive(false);
+                        shape.SetActive(true);
+                    }
                 }
             }
         }

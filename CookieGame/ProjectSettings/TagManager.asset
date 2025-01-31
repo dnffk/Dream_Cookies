@@ -15,6 +15,7 @@ TagManager:
   - Flour
   - Sugar
   - Rolling pin
+  - Cut
   layers:
   - Default
   - TransparentFX

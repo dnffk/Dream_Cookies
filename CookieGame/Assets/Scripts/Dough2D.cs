@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Dough2D : MonoBehaviour
 {
-    public RollingManager rollingManager;
     public bool isCollidedPin = false; // ¹İÁ×°ú Rolling pinÀÌ ´ê¾ÆÀÖ´ÂÁö?
 
     private void OnTriggerEnter2D(Collider2D other)
