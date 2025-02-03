@@ -3836,7 +3836,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Shape2D: {fileID: 1778343849}
-  cookiePrefab: {fileID: 0}
+  circleCookiePrefab: {fileID: 5553912471025247305, guid: 2fcff89fcc50f034991bfa51bb9339ab, type: 3}
+  heartCookiePrefab: {fileID: 4916716735594528484, guid: d847adbe2c644454db9efcdcc2ea8ce0, type: 3}
+  starCookiePrefab: {fileID: 775458733315793008, guid: 17ef7039450ba4b4f81aca5b70cc2825, type: 3}
+  cookieManPrefab: {fileID: 3808599631873655700, guid: 4cce486f872ebb443a37a60288ae0e6a, type: 3}
+  nextButton: {fileID: 745818066}
   press: 1
 --- !u!1 &1630485405
 GameObject:
@@ -4253,7 +4257,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 964051a247dcaf64c86ed72aa8be3f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isOverShape: 0
+  isCircle: 0
+  isHeart: 0
+  isStar: 0
+  isCookieMan: 0
 --- !u!1 &1800980035
 GameObject:
   m_ObjectHideFlags: 0
