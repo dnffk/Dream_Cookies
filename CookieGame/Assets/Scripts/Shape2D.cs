@@ -28,12 +28,4 @@ public class Shape2D : MonoBehaviour
             isCookieMan = true;
         }
     }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Cut"))
-        {
-            isCookieMan = true;
-        }
-    }
 }

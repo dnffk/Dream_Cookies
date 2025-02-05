@@ -7,6 +7,12 @@ public class CookieShapeManager : MonoBehaviour
     [SerializeField] private GameObject heartCookiePrefab;
     [SerializeField] private GameObject starCookiePrefab;
     [SerializeField] private GameObject cookieManPrefab;
+
+    [SerializeField] private GameObject Circle;
+    [SerializeField] private GameObject Heart;
+    [SerializeField] private GameObject Star;
+    [SerializeField] private GameObject CookieMan;
+
     public GameObject nextButton;
 
     public float press = 1.0f; // 1초 이상 누르면 쿠키 생성
@@ -33,7 +39,7 @@ public class CookieShapeManager : MonoBehaviour
             }
         }
 
-        if (isPressing && Shape2D.isCircle || Shape2D.isStar || Shape2D.isHeart || Shape2D.isCookieMan)
+        if (isPressing && (Shape2D.isCircle || Shape2D.isStar || Shape2D.isHeart || Shape2D.isCookieMan))
         {
             pressTime += Time.deltaTime;
             if (pressTime >= press)
@@ -48,21 +54,35 @@ public class CookieShapeManager : MonoBehaviour
 
     private void CreateCookie()
     {
+        GameObject prefab = null;
+        Transform spawnTransform = null;
+
         if (Shape2D.isCircle)
         {
-            Instantiate(circleCookiePrefab, transform.position, Quaternion.identity);
+            prefab = circleCookiePrefab;
+            spawnTransform = Circle.transform;
         }
         else if (Shape2D.isHeart)
         {
-            Instantiate(heartCookiePrefab, transform.position, Quaternion.identity);
+            prefab = heartCookiePrefab;
+            spawnTransform = Heart.transform;
         }
         else if (Shape2D.isStar)
         {
-            Instantiate(starCookiePrefab, transform.position, Quaternion.identity);
+            prefab = starCookiePrefab;
+            spawnTransform = Star.transform;
         }
         else if (Shape2D.isCookieMan)
         {
-            Instantiate(cookieManPrefab, transform.position, Quaternion.identity);
+            prefab = cookieManPrefab;
+            spawnTransform = CookieMan.transform;
+        }
+
+        if (prefab != null && spawnTransform != null)
+        {
+            Vector3 spawnPos = spawnTransform.position;
+            spawnPos.z = -1.5f;
+            Instantiate(prefab, spawnPos, Quaternion.identity);
         }
 
         Shape2D.isCircle = false;
@@ -71,8 +91,7 @@ public class CookieShapeManager : MonoBehaviour
         Shape2D.isCookieMan = false;
 
         cookieCount++;
-
-        if(cookieCount >= 4)
+        if (cookieCount >= 4)
         {
             nextButton.SetActive(true);
         }

@@ -11,4 +11,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CookieMakeScene.unity
     guid: 96cb01d6d74890b44897e063cc249557
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 1588f282d90930a428be047d68d24999, type: 2}

@@ -15,7 +15,10 @@ TagManager:
   - Flour
   - Sugar
   - Rolling pin
-  - Cut
+  - Circle
+  - Heart
+  - Star
+  - CookieMan
   layers:
   - Default
   - TransparentFX
