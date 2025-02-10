@@ -1,25 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Properties;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class BakingManager : MonoBehaviour
 {
+    [Header("Steps Settings")]
+    [SerializeField] private List<BakeStep> steps;    // 단계를 Inspector에서 세팅
+
+    [SerializeField] private TMP_Text requestText;
     [SerializeField] private Transform timeDial;
     [SerializeField] private Transform tempDial;
 
     [SerializeField] private float timeDialMaxAngle = 180f;
-    [SerializeField] private float tempDialMaxAngle = 180f;
 
+    private int currentStepIndex = 0;
     private int currentTime = 0;
     private int currentTemp = 100;
     void Start()
     {
+        if (steps != null && steps.Count > 0)
+        {
+            requestText.text = steps[currentStepIndex].instruction;
+        }
+
         UpdateTimeDial();
-        UpdateTempDial();
     }
 
     void Update()
     {
+        if (currentStepIndex >= steps.Count)
+        {
+            return;
+        }
+
+        var step = steps[currentStepIndex];
+
+        if(step.isOpenDoorStep)
+        {
+            OpenClose();
+        }
+        else if (step.isSetTimeDialStep)
+        {
+            UpdateTimeDial();
+        }
+        else if (step.isWaitBakeStep)
+        {
+            BakingTime();
+        }
         if (Input.touchCount > 0)
         {
             Touch t = Input.GetTouch(0);
@@ -47,7 +77,6 @@ public class BakingManager : MonoBehaviour
                         {
                             currentTemp = 100;
                         }
-                        UpdateTempDial();
                     }
                 }
             }
@@ -61,10 +90,13 @@ public class BakingManager : MonoBehaviour
         timeDial.localEulerAngles = new Vector3(0f, 0f, -angle);
     }
 
-    private void UpdateTempDial()
+    private void OpenClose()
     {
-        float ratio = (float)(currentTemp - 100) / 130f;
-        float angle = ratio * tempDialMaxAngle;
-        tempDial.localEulerAngles = new Vector3(0f, 0f, -angle);
+
+    }
+
+    private void BakingTime()
+    {
+
     }
 }

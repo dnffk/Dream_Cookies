@@ -57,11 +57,6 @@ public class MixManager : MonoBehaviour
         }
         else
         {
-            //if (slider.gameObject.activeSelf)
-            //{
-            //    slider.gameObject.SetActive(false);
-            //}
-
             if (CheckAllRequiredItems(step.requiredTags))
             {
                 DestroyItems(step.requiredTags.ToArray());  // Bowl 안에 있는 해당 태그 아이템들 파괴

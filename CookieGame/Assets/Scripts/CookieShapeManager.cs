@@ -80,8 +80,8 @@ public class CookieShapeManager : MonoBehaviour
 
         if (prefab != null && spawnTransform != null)
         {
-            Vector3 spawnPos = spawnTransform.position;
-            spawnPos.z = -1.5f;
+            Vector2 spawnPos = spawnTransform.position;
+
             Instantiate(prefab, spawnPos, Quaternion.identity);
         }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class RollingManager : MonoBehaviour
 {
     [SerializeField] private Transform dough; // 변경시킬 반죽 오브젝트
-    [SerializeField] private float scaleFactor = 0.001f; // 스케일 변경 비율\
+    [SerializeField] private float scaleFactor = 0.001f; // 스케일 변경 비율
     [SerializeField] public Dough2D dough2d;
     public GameObject rollingPin;
     public GameObject shape1;
