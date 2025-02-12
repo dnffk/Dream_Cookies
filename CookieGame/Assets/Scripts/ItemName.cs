@@ -1,0 +1,26 @@
+public enum ItemName
+{
+    StrawberryPowder,
+    ChocoPowder,
+    GreenteaPowder,
+    Circle,
+    Heart,
+    Star,
+    CookieMan,
+    less,
+    normal,
+    burn,
+    StrawberryJam,
+    AppleJam,
+    Marshmallow,
+    MM,
+    Sprinkle,
+    Nuts,
+    Creamcheese,
+    Smileeye,
+    SmileMouse,
+    Sadeye,
+    SadMouse,
+    AngryEyeLeft,
+    AngryEyeRight
+}

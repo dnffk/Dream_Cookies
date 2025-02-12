@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class CheckItemManager : MonoBehaviour
 {
     public static CheckItemManager Instance { get; private set; }
-    public bool[] itemUsed = new bool[20];
+    public bool[] itemUsed = new bool[System.Enum.GetValues(typeof(ItemName)).Length];
 
     private void Awake()
     {
@@ -23,8 +23,13 @@ public class CheckItemManager : MonoBehaviour
         }
     }
 
-    public void UseItem(int index)
+    public void UseItem(ItemName item)
     {
-        itemUsed[index] = true;
+        itemUsed[(int)item] = true;
+    }
+
+    public bool IsItemUsed(ItemName item)
+    {
+        return itemUsed[(int)item];
     }
 }

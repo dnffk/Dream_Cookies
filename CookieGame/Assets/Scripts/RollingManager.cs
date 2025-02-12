@@ -7,11 +7,8 @@ public class RollingManager : MonoBehaviour
     [SerializeField] private Transform dough; // 변경시킬 반죽 오브젝트
     [SerializeField] private float scaleFactor = 0.001f; // 스케일 변경 비율
     [SerializeField] public Dough2D dough2d;
+    [SerializeField] public CookieShapeManager CookieShape;
     public GameObject rollingPin;
-    public GameObject shape1;
-    public GameObject shape2;
-    public GameObject shape3;
-    public GameObject shape4;
 
     private Vector2 lastTouchPos; // 최종 pos
 
@@ -44,10 +41,7 @@ public class RollingManager : MonoBehaviour
                         && Mathf.Approximately(newScale.y, 3.7f))
                     {
                         rollingPin.SetActive(false);
-                        shape1.SetActive(true);
-                        shape2.SetActive(true);
-                        shape3.SetActive(true);
-                        shape4.SetActive(true);
+                        CookieShape.CookieCutterShow();
                     }
                 }
             }

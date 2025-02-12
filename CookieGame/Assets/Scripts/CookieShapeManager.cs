@@ -96,4 +96,12 @@ public class CookieShapeManager : MonoBehaviour
             nextButton.SetActive(true);
         }
     }
+
+    public void CookieCutterShow()
+    {
+        Circle.SetActive(true);
+        Star.SetActive(true);
+        Heart.SetActive(true);
+        CookieMan.SetActive(true);
+    }
 }

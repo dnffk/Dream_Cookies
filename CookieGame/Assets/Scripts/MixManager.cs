@@ -13,6 +13,7 @@ public class MixManager : MonoBehaviour
     [SerializeField] private GameObject nextButton;    // 장면 전환 버튼
     [SerializeField] private float down = 1f;
     [SerializeField] private Slider slider;    // progressbar
+    [SerializeField] private GameObject handMix;  // HandMix 오브젝트
 
     [Header("Steps Settings")]
     [SerializeField] private List<MixStep> steps;    // 단계를 Inspector에서 세팅
@@ -108,15 +109,16 @@ public class MixManager : MonoBehaviour
             {
                 if (hasStrawberry)
                 {
-                    CheckItemManager.Instance.UseItem(0);
+                    CheckItemManager.Instance.UseItem(ItemName.StrawberryPowder);
                 }
                 else if (hasChoco)
                 {
-                    CheckItemManager.Instance.UseItem(1);
+                    CheckItemManager.Instance.UseItem(ItemName.ChocoPowder);
                 }
                 else if (hasGreenTea)
                 {
-                    CheckItemManager.Instance.UseItem(2);
+                    CheckItemManager.Instance.UseItem(ItemName.GreenteaPowder);
+
                 }
 
                 return true;
@@ -164,12 +166,18 @@ public class MixManager : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
 
+            Vector2 worldPos = Camera.main.ScreenToWorldPoint(touch.position);
+
             switch (touch.phase)
             {
                 case TouchPhase.Began:
                     if (IsTouchOnBowl(touch))
                     {
                         isBowlTouchStarted = true;
+
+                        if(handMix) handMix.SetActive(true);
+                        if (handMix) handMix.transform.position = worldPos;
+
                         currentMixTime = 0f;
                     }
                     else
@@ -181,12 +189,17 @@ public class MixManager : MonoBehaviour
                 case TouchPhase.Moved:
                 case TouchPhase.Stationary:
                     if (isBowlTouchStarted)
+                    {
+                        if (handMix) handMix.transform.position = worldPos;
                         return true;
+                    }
                     break;
 
                 case TouchPhase.Ended:
                 case TouchPhase.Canceled:
                     isBowlTouchStarted = false;
+
+                    if (handMix) handMix.SetActive(false);
                     break;
             }
         }
