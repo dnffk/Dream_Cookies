@@ -51,6 +51,7 @@ public class MixManager : MonoBehaviour
 
             if (IsMixingOverTime(step.mixTime))
             {
+                if (handMix) handMix.SetActive(false);
                 GoToNextStep();
             }
 

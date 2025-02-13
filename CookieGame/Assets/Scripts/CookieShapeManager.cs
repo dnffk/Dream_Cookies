@@ -7,13 +7,16 @@ public class CookieShapeManager : MonoBehaviour
     [SerializeField] private GameObject heartCookiePrefab;
     [SerializeField] private GameObject starCookiePrefab;
     [SerializeField] private GameObject cookieManPrefab;
+    [SerializeField] private ItemPickManager itemPick;
 
     [SerializeField] private GameObject Circle;
     [SerializeField] private GameObject Heart;
     [SerializeField] private GameObject Star;
     [SerializeField] private GameObject CookieMan;
+    [SerializeField] private GameObject Text;
 
     public GameObject nextButton;
+    public GameObject OvenButton;
 
     public float press = 1.0f; // 1초 이상 누르면 쿠키 생성
     private bool isPressing = false;    // 현재 누르고 있는 중인지
@@ -91,9 +94,12 @@ public class CookieShapeManager : MonoBehaviour
         Shape2D.isCookieMan = false;
 
         cookieCount++;
-        if (cookieCount >= 4)
+        if (cookieCount >= 1)
         {
             nextButton.SetActive(true);
+            OvenButton.SetActive(true);
+            itemPick.gameObject.SetActive(false);
+            Text.SetActive(true);
         }
     }
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6e1e7ab6e84361549931f4d917f8bfae
+guid: 41624f34862e35c4986e210e5fd6edc1
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -121,133 +121,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: buttons free_0
-      rect:
-        serializedVersion: 2
-        x: 3
-        y: 66
-        width: 42
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a2a02d06e0e74fe41b8daa5f315c65ae
-      internalID: 1224072890
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: buttons free_1
-      rect:
-        serializedVersion: 2
-        x: 51
-        y: 66
-        width: 42
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4091984d34fa8934aba56b8bac4e5b00
-      internalID: -403108553
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: buttons free_2
-      rect:
-        serializedVersion: 2
-        x: 3
-        y: 34
-        width: 42
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cb8d4e123f831d2409f9776c04e57c2a
-      internalID: 725500871
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: buttons free_3
-      rect:
-        serializedVersion: 2
-        x: 51
-        y: 34
-        width: 42
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 89a2e29c2c832b745b701b752df6b31d
-      internalID: 214976905
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: buttons free_4
-      rect:
-        serializedVersion: 2
-        x: 3
-        y: 2
-        width: 42
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3a996fa085948654c8082a2a5f467b4e
-      internalID: -1494740250
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: buttons free_5
-      rect:
-        serializedVersion: 2
-        x: 51
-        y: 2
-        width: 42
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 761d55fcdf5cab745b94530a8d058b6e
-      internalID: 1041400743
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -258,13 +132,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      buttons free_0: 1224072890
-      buttons free_1: -403108553
-      buttons free_2: 725500871
-      buttons free_3: 214976905
-      buttons free_4: -1494740250
-      buttons free_5: 1041400743
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
