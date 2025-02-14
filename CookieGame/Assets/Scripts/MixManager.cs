@@ -178,8 +178,6 @@ public class MixManager : MonoBehaviour
 
                         if(handMix) handMix.SetActive(true);
                         if (handMix) handMix.transform.position = worldPos;
-
-                        currentMixTime = 0f;
                     }
                     else
                     {

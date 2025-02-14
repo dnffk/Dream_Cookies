@@ -3,11 +3,11 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Collections;
 
 public class BakingManager : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private TMP_Text requestText;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private GameObject Oven;
     [SerializeField] private GameObject Timer;
@@ -16,8 +16,8 @@ public class BakingManager : MonoBehaviour
     [SerializeField] private GameObject Hand;
 
     [Header("Handle Gauge Settings")]
-    [SerializeField] private float handleDecreaseSpeed = 2.0f;
-    [SerializeField] private float handleIncreaseAmount = 3.0f;
+    [SerializeField] private float handleDecreaseSpeed = 0.2f;
+    [SerializeField] private float handleIncreaseAmount = 0.3f;
     [SerializeField] private float playTime = 0f;
     [SerializeField] private GameObject fire1;
     [SerializeField] private GameObject fire2;
@@ -33,12 +33,11 @@ public class BakingManager : MonoBehaviour
     private float handleValue = 1f;
     private float timer = 0f;
     private bool isBakingActive = false;
+    private bool isRotating = false;  // 중복 회전 방지용
     private Renderer ovenRenderer;
 
     void Start()
     {
-        progressSlider.gameObject.SetActive(false);
-        OvenButton.gameObject.SetActive(false);
         progressSlider.minValue = 0f;
         progressSlider.maxValue = 1.0f;
         progressSlider.value = handleValue;
@@ -61,56 +60,20 @@ public class BakingManager : MonoBehaviour
 
     private void IsTouchingTimer()
     {
-        // 터치가 하나 이상 있을 때
         if (Input.touchCount > 0)
         {
             Touch t = Input.GetTouch(0);
 
-            // 터치가 시작/이동/유지 상태일 때만 검사 (짧은 탭도 Began에서 인식 가능)
-            if (t.phase == TouchPhase.Began ||
-                t.phase == TouchPhase.Moved ||
-                t.phase == TouchPhase.Stationary)
+            // 끝났을 때 한 번만 처리
+            if (t.phase == TouchPhase.Ended)
             {
-                // 화면 터치 좌표를 월드 좌표로 변환
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(t.position);
-
-                // 2D Raycast로 해당 지점을 검사
                 RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.zero);
-                if (hit.collider != null)
+
+                if (hit.collider != null && hit.collider.gameObject == Timer)
                 {
-                    // 닿은 Collider가 Timer 오브젝트인지 확인
-                    if (hit.collider.gameObject == Timer)
-                    {
-                        float currentZ = Timer.transform.eulerAngles.z;
-
-                        currentZ += 90f;
-
-                        if (currentZ >= 360f)
-                        {
-                            currentZ -= 360f;
-                        }
-
-                        // 새 각도 적용
-                        Timer.transform.eulerAngles = new Vector3(0f, 0f, currentZ);
-
-                        switch (Mathf.RoundToInt(currentZ))
-                        {
-                            case 0:
-                                playTime = 5f;
-                                break;
-                            case 90:
-                                playTime = 15f;
-                                break;
-                            case 180:
-                                playTime = 30f;
-                                break;
-                            case 270:
-                                playTime = 45f;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+                    // 회전 +90
+                    StartCoroutine(RotateDialCoroutine(90f, 0.3f));
                 }
             }
         }
@@ -118,13 +81,12 @@ public class BakingManager : MonoBehaviour
 
     private void BakingTime()
     {// 쿠키 굽기 과정 진행 ( 게이지 / 타이머(?) )
-     // 터치 위치에 오븐장갑 따라다니면 좋을 듯
         if (!isBakingActive) return;
 
-        timer += Time.deltaTime; // 7초 동안 진행
+        timer += Time.deltaTime;
         if (timer >= playTime)
         {
-            isBakingActive = false; // 7초 이후 게임 종료
+            isBakingActive = false;
             CheckZoneTime();
             return;
         }
@@ -213,26 +175,19 @@ public class BakingManager : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch t = Input.GetTouch(0);
-            // 짧게 터치해도 잡히도록 Began/Moved/Stationary 모두 확인
-            if (t.phase == TouchPhase.Began
-                || t.phase == TouchPhase.Moved
-                || t.phase == TouchPhase.Stationary)
+            if (t.phase == TouchPhase.Began || t.phase == TouchPhase.Ended)
             {
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(t.position);
-
-                // 2D Raycast
                 RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.zero);
+
                 if (hit.collider != null)
                 {
                     // 맞은 것이 Oven 오브젝트인지 확인
                     if (hit.collider.gameObject == Oven)
                     {
-                        // Hand 오브젝트를 보이게 하고, 터치 위치로 이동
                         Hand.SetActive(true);
-                        // z값은 Hand 오브젝트의 기존 z 유지
-                        Hand.transform.position = new Vector3(touchPos.x, touchPos.y, Hand.transform.position.z);
+                        Hand.transform.position = new Vector2(touchPos.x, touchPos.y);
 
-                        // 오븐을 터치한 것으로 간주
                         return true;
                     }
                 }
@@ -240,10 +195,90 @@ public class BakingManager : MonoBehaviour
         }
         return false;
     }
+
+    IEnumerator RotateDialCoroutine(float angleDelta, float duration)
+    {
+        // 이미 회전 중이라면 바로 종료
+        if (isRotating) yield break;
+        isRotating = true;
+
+        float startZ = Timer.transform.eulerAngles.z;
+        float targetZ = startZ + angleDelta;
+
+        // 0~360 범위를 벗어나는 경우 보정
+        if (targetZ >= 360f)
+            targetZ -= 360f;
+        else if (targetZ < 0f)
+            targetZ += 360f;
+
+        float time = 0f;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+            // Mathf.LerpAngle을 쓰면 350 -> 10도 같은 상황에서도 부드럽게 보간됩니다.
+            float newZ = Mathf.LerpAngle(startZ, targetZ, t);
+            Timer.transform.eulerAngles = new Vector3(0f, 0f, newZ);
+
+            yield return null;
+        }
+        // 마지막 각도를 정확히 맞춰줌
+        Timer.transform.eulerAngles = new Vector3(0f, 0f, targetZ);
+
+        // 회전 끝난 후, finalAngle에 따른 playTime 적용
+        float finalAngle = Timer.transform.eulerAngles.z;
+        switch (Mathf.RoundToInt(finalAngle))
+        {
+            case 0:
+                playTime = 0f;
+                break;
+            case 90:
+                playTime = 10f;
+                break;
+            case 180:
+                playTime = 20f;
+                break;
+            case 270:
+                playTime = 30f;
+                break;
+        }
+
+        isRotating = false;
+    }
+
     public void OnOvenButtonClicked()
     {
-        // 오븐 버튼을 누르면 굽기 과정을 시작
-        progressSlider.gameObject.SetActive(true);
+        if (playTime <= 0f)
+        {
+            return;
+        }
+
+        // 베이킹 시작
         isBakingActive = true;
+        timer = 0f;
+
+        StartCoroutine(RotateDialBackCoroutine(playTime));
     }
+
+    private IEnumerator RotateDialBackCoroutine(float duration)
+    {
+        float startZ = Timer.transform.eulerAngles.z;
+        float endZ = 0f;
+
+        float time = 0f;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+
+            float newZ = Mathf.LerpAngle(startZ, endZ, t);
+            Timer.transform.eulerAngles = new Vector3(0f, 0f, newZ);
+
+            yield return null;
+        }
+
+        // 마지막에 딱 0도로 맞춤
+        Timer.transform.eulerAngles = new Vector3(0f, 0f, 0f);
+    }
+
 }

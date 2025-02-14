@@ -13,19 +13,18 @@ public class CookieShapeManager : MonoBehaviour
     [SerializeField] private GameObject Heart;
     [SerializeField] private GameObject Star;
     [SerializeField] private GameObject CookieMan;
-    [SerializeField] private GameObject Text;
 
     public GameObject nextButton;
-    public GameObject OvenButton;
 
-    public float press = 1.0f; // 1초 이상 누르면 쿠키 생성
-    private bool isPressing = false;    // 현재 누르고 있는 중인지
-    private float pressTime = 0f;       // 누른 시간 누적
+    public float press = 1.0f;
+    private bool isPressing = false;
+    private float pressTime = 0f;
     private int cookieCount = 0;
+
+    private Vector2 touchStartPos;
 
     void Update()
     {
-        // 터치 기준 예시
         if (Input.touchCount > 0)
         {
             Touch t = Input.GetTouch(0);
@@ -37,57 +36,55 @@ public class CookieShapeManager : MonoBehaviour
             }
             else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled)
             {
+                touchStartPos = t.position;
                 isPressing = false;
                 pressTime = 0f;
             }
         }
 
+        // 아무 모양이나 선택되어 있을 때만 누른 시간 체크
         if (isPressing && (Shape2D.isCircle || Shape2D.isStar || Shape2D.isHeart || Shape2D.isCookieMan))
         {
             pressTime += Time.deltaTime;
             if (pressTime >= press)
             {
-                CreateCookie();
+                Vector2 spawnPos = Camera.main.ScreenToWorldPoint(new Vector2(touchStartPos.x, touchStartPos.y));
 
+                CreateCookie(spawnPos);
                 pressTime = 0f;
                 isPressing = false;
             }
         }
     }
 
-    private void CreateCookie()
+    // 생성 위치를 파라미터로 받도록 수정
+    private void CreateCookie(Vector2 spawnPos)
     {
         GameObject prefab = null;
-        Transform spawnTransform = null;
 
         if (Shape2D.isCircle)
         {
             prefab = circleCookiePrefab;
-            spawnTransform = Circle.transform;
         }
         else if (Shape2D.isHeart)
         {
             prefab = heartCookiePrefab;
-            spawnTransform = Heart.transform;
         }
         else if (Shape2D.isStar)
         {
             prefab = starCookiePrefab;
-            spawnTransform = Star.transform;
         }
         else if (Shape2D.isCookieMan)
         {
             prefab = cookieManPrefab;
-            spawnTransform = CookieMan.transform;
         }
 
-        if (prefab != null && spawnTransform != null)
+        if (prefab != null)
         {
-            Vector2 spawnPos = spawnTransform.position;
-
             Instantiate(prefab, spawnPos, Quaternion.identity);
         }
 
+        // 모양 선택 해제
         Shape2D.isCircle = false;
         Shape2D.isHeart = false;
         Shape2D.isStar = false;
@@ -97,9 +94,7 @@ public class CookieShapeManager : MonoBehaviour
         if (cookieCount >= 1)
         {
             nextButton.SetActive(true);
-            OvenButton.SetActive(true);
             itemPick.gameObject.SetActive(false);
-            Text.SetActive(true);
         }
     }
 
