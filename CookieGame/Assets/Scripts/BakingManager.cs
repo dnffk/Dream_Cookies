@@ -26,9 +26,11 @@ public class BakingManager : MonoBehaviour
     [SerializeField] private Color redColor = Color.red;
     [SerializeField] private Color orangeColor = new Color(1f, 0.5f, 0f, 1f);
 
-    private float RedTime = 0f;  // 0.8 ~ 1.0
-    private float OrangeTime = 0f;  // 0.6 ~ 0.8
-    private float greenTime = 0f;  // 0.4 ~ 0.6
+    // 구간별 시간 측정
+    private float RedTime = 0f;     // 빨간 구간(혹은 매우 낮은 구간) 누적
+    private float OrangeTime = 0f;  // 주황 구간 누적
+    private float greenTime = 0f;   // 초록 구간 누적
+    private float yellowTime = 0f;
 
     private float handleValue = 1f;
     private float timer = 0f;
@@ -41,10 +43,6 @@ public class BakingManager : MonoBehaviour
         progressSlider.minValue = 0f;
         progressSlider.maxValue = 1.0f;
         progressSlider.value = handleValue;
-
-        fire1.SetActive(false);
-        fire2.SetActive(false);
-        fire3.SetActive(false);
 
         ovenRenderer = Oven.GetComponent<Renderer>();
     }
@@ -64,7 +62,6 @@ public class BakingManager : MonoBehaviour
         {
             Touch t = Input.GetTouch(0);
 
-            // 끝났을 때 한 번만 처리
             if (t.phase == TouchPhase.Ended)
             {
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(t.position);
@@ -72,7 +69,6 @@ public class BakingManager : MonoBehaviour
 
                 if (hit.collider != null && hit.collider.gameObject == Timer)
                 {
-                    // 회전 +90
                     StartCoroutine(RotateDialCoroutine(90f, 0.3f));
                 }
             }
@@ -80,17 +76,20 @@ public class BakingManager : MonoBehaviour
     }
 
     private void BakingTime()
-    {// 쿠키 굽기 과정 진행 ( 게이지 / 타이머(?) )
+    {
+        // 쿠키 굽기 과정 진행 (게이지 / 타이머)
         if (!isBakingActive) return;
 
         timer += Time.deltaTime;
         if (timer >= playTime)
         {
+            // 베이킹이 끝나면 해당 구간에서 가장 오래 머문 구간 판단
             isBakingActive = false;
             CheckZoneTime();
             return;
         }
 
+        // 오븐을 터치 중이면 게이지 증가, 아니면 감소
         if (IsTouchingOven())
         {
             handleValue += handleIncreaseAmount * Time.deltaTime;
@@ -102,30 +101,44 @@ public class BakingManager : MonoBehaviour
             handleValue = Mathf.Clamp(handleValue, 0f, 1.0f);
         }
 
-        AccumulateZoneTime(handleValue, Time.deltaTime);   // 현재 게이지 값에 따라 해당 구간 시간 누적
+        // 현재 게이지 값에 따라 해당 구간 시간 누적
+        AccumulateZoneTime(handleValue, Time.deltaTime);
 
-        progressSlider.value = handleValue; // Slider UI 업데이트
+        // 슬라이더 UI 업데이트
+        progressSlider.value = handleValue;
     }
 
     private void AccumulateZoneTime(float value, float deltaTime)
     {
-        if ((value >= 0.85f && value <= 1.0f) || (value >= 0.0f && value < 0.3f))
+        // 빨간색 구간
+        if (value >= 0.82f && value <= 1.0f)
         {
-            ovenRenderer.material.color = redColor;
+            ovenRenderer.material.color = redColor; 
             fire1.SetActive(true);
             fire2.SetActive(true);
             fire3.SetActive(true);
             RedTime += deltaTime;
         }
-        else if ((value >= 0.7f && value < 0.85f) || (value >= 0.3f && value < 0.5f))
+        // 주황색 구간
+        else if (value >= 0.6f && value < 0.82f)
         {
             ovenRenderer.material.color = orangeColor;
             fire1.SetActive(true);
-            fire2.SetActive(false);
+            fire2.SetActive(true);
             fire3.SetActive(false);
             OrangeTime += deltaTime;
         }
-        else if (value >= 0.5f && value < 0.7f)
+        // 노랑 구간
+        else if (value >= 0.3f && value < 0.6f)
+        {
+            ovenRenderer.material.color = Color.white;
+            fire1.SetActive(false);
+            fire2.SetActive(false);
+            fire3.SetActive(true);
+            yellowTime += deltaTime;
+        }
+        // 초록 구간
+        else if (value >= 0f && value < 0.3f)
         {
             ovenRenderer.material.color = Color.white;
             fire1.SetActive(false);
@@ -139,35 +152,63 @@ public class BakingManager : MonoBehaviour
     {
         float maxTime = Mathf.Max(RedTime, OrangeTime, greenTime);
 
+        // 어떤 구간에서 가장 오래 머물렀는지 판별
         string resultZone;
         if (Mathf.Approximately(maxTime, RedTime))
             resultZone = "빨간 구간";
         else if (Mathf.Approximately(maxTime, OrangeTime))
             resultZone = "주황 구간";
-        else
+        else if (Mathf.Approximately(maxTime, greenTime))
             resultZone = "초록 구간";
-
-        if (resultZone == "초록 구간")
-        {
-            CheckItemManager.Instance.UseItem(ItemName.normal);
-            Debug.Log("쿠키가 잘 익었따");
-            // 잘 구워진 쿠키 애니메이션
-        }
-        else if(resultZone == "빨간 구간")
-        {
-            CheckItemManager.Instance.UseItem(ItemName.burn);
-            Debug.Log("쿠키가 탔다");
-            // 타버린 쿠키 애니메이션
-        }
         else
+            resultZone = "노란 구간";
+
+        if (Mathf.Approximately(playTime, 6f))
         {
-            CheckItemManager.Instance.UseItem(ItemName.less);
-            Debug.Log("쿠키가 덜 익었다");
-            // 덜 익은 쿠키 애니메이션
+            if (resultZone == "주황 구간")
+            {
+                CheckItemManager.Instance.UseItem(ItemName.normal);
+            }
+            else if(resultZone == "빨간 구간")
+            {
+                CheckItemManager.Instance.UseItem(ItemName.burn);
+            }
+            else
+            {
+                CheckItemManager.Instance.UseItem(ItemName.less);
+            }
+        }
+        else if (Mathf.Approximately(playTime, 8f))
+        {
+            if (resultZone == "노란 구간")
+            {
+                CheckItemManager.Instance.UseItem(ItemName.normal);
+            }
+            else if (resultZone == "빨간 구간" || resultZone == "주황 구간")
+            {
+                CheckItemManager.Instance.UseItem(ItemName.burn);
+            }
+            else
+            {
+                CheckItemManager.Instance.UseItem(ItemName.less);
+            }
+        }
+        else if (Mathf.Approximately(playTime, 10f))
+        {
+            if (resultZone == "초록 구간")
+            {
+                CheckItemManager.Instance.UseItem(ItemName.normal);
+            }
+            else
+            {
+                CheckItemManager.Instance.UseItem(ItemName.burn);
+            }
         }
 
+        // 다음 단계 버튼 활성화
         nextButton.SetActive(true);
     }
+
     private bool IsTouchingOven()
     {
         Hand.SetActive(false);
@@ -182,12 +223,11 @@ public class BakingManager : MonoBehaviour
 
                 if (hit.collider != null)
                 {
-                    // 맞은 것이 Oven 오브젝트인지 확인
+                    // 터치 대상이 오븐인지 확인
                     if (hit.collider.gameObject == Oven)
                     {
                         Hand.SetActive(true);
                         Hand.transform.position = new Vector2(touchPos.x, touchPos.y);
-
                         return true;
                     }
                 }
@@ -198,34 +238,28 @@ public class BakingManager : MonoBehaviour
 
     IEnumerator RotateDialCoroutine(float angleDelta, float duration)
     {
-        // 이미 회전 중이라면 바로 종료
         if (isRotating) yield break;
         isRotating = true;
 
         float startZ = Timer.transform.eulerAngles.z;
         float targetZ = startZ + angleDelta;
 
-        // 0~360 범위를 벗어나는 경우 보정
-        if (targetZ >= 360f)
-            targetZ -= 360f;
-        else if (targetZ < 0f)
-            targetZ += 360f;
+        // 각도 보정
+        if (targetZ >= 360f) targetZ -= 360f;
+        else if (targetZ < 0f) targetZ += 360f;
 
         float time = 0f;
         while (time < duration)
         {
             time += Time.deltaTime;
             float t = time / duration;
-            // Mathf.LerpAngle을 쓰면 350 -> 10도 같은 상황에서도 부드럽게 보간됩니다.
             float newZ = Mathf.LerpAngle(startZ, targetZ, t);
             Timer.transform.eulerAngles = new Vector3(0f, 0f, newZ);
 
             yield return null;
         }
-        // 마지막 각도를 정확히 맞춰줌
         Timer.transform.eulerAngles = new Vector3(0f, 0f, targetZ);
 
-        // 회전 끝난 후, finalAngle에 따른 playTime 적용
         float finalAngle = Timer.transform.eulerAngles.z;
         switch (Mathf.RoundToInt(finalAngle))
         {
@@ -233,13 +267,13 @@ public class BakingManager : MonoBehaviour
                 playTime = 0f;
                 break;
             case 90:
-                playTime = 10f;
+                playTime = 6f;
                 break;
             case 180:
-                playTime = 20f;
+                playTime = 8f;
                 break;
             case 270:
-                playTime = 30f;
+                playTime = 10f;
                 break;
         }
 
@@ -276,9 +310,7 @@ public class BakingManager : MonoBehaviour
 
             yield return null;
         }
-
-        // 마지막에 딱 0도로 맞춤
+        // 마지막에 정확히 0도로 맞춤
         Timer.transform.eulerAngles = new Vector3(0f, 0f, 0f);
     }
-
 }

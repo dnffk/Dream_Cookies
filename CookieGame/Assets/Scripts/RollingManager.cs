@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class RollingManager : MonoBehaviour
 {
-    [Header("반죽 Transform")]
     [SerializeField] private Transform dough;
     [SerializeField] private float scaleFactor = 0.001f;
 
-    [Header("반죽 최대 크기 / 다음단계 임계값")]
     [SerializeField] private float maxScaleX = 35f;
     [SerializeField] private float maxScaleY = 20f;
     [SerializeField] private float thresholdScaleX = 35f;
     [SerializeField] private float thresholdScaleY = 20f;
 
-    [Header("연관 스크립트 & 오브젝트")]
     [SerializeField] private Dough2D dough2d;
     [SerializeField] private CookieShapeManager CookieShape;
     public GameObject rollingPin;

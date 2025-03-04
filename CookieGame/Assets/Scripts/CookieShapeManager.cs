@@ -16,12 +16,10 @@ public class CookieShapeManager : MonoBehaviour
 
     public GameObject nextButton;
 
-    public float press = 1.0f;
+    public float press = 1.0f;         // 1초 이상 눌러야 쿠키 생성
     private bool isPressing = false;
     private float pressTime = 0f;
     private int cookieCount = 0;
-
-    private Vector2 touchStartPos;
 
     void Update()
     {
@@ -29,35 +27,36 @@ public class CookieShapeManager : MonoBehaviour
         {
             Touch t = Input.GetTouch(0);
 
-            if (t.phase == TouchPhase.Began)
+            switch (t.phase)
             {
-                isPressing = true;
-                pressTime = 0f;
-            }
-            else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled)
-            {
-                touchStartPos = t.position;
-                isPressing = false;
-                pressTime = 0f;
-            }
-        }
+                case TouchPhase.Began:
+                    isPressing = true;
+                    pressTime = 0f;
+                    break;
 
-        // 아무 모양이나 선택되어 있을 때만 누른 시간 체크
-        if (isPressing && (Shape2D.isCircle || Shape2D.isStar || Shape2D.isHeart || Shape2D.isCookieMan))
-        {
-            pressTime += Time.deltaTime;
-            if (pressTime >= press)
-            {
-                Vector2 spawnPos = Camera.main.ScreenToWorldPoint(new Vector2(touchStartPos.x, touchStartPos.y));
+                case TouchPhase.Moved:
+                case TouchPhase.Stationary:
+                    if (isPressing)
+                        pressTime += Time.deltaTime;
+                    break;
 
-                CreateCookie(spawnPos);
-                pressTime = 0f;
-                isPressing = false;
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    if (isPressing && (Shape2D.isCircle || Shape2D.isHeart || Shape2D.isStar || Shape2D.isCookieMan))
+                    {
+                        if (pressTime >= press)
+                        {
+                            Vector2 spawnPos = Camera.main.ScreenToWorldPoint(t.position);
+                            CreateCookie(spawnPos);
+                        }
+                    }
+                    isPressing = false;
+                    pressTime = 0f;
+                    break;
             }
         }
     }
 
-    // 생성 위치를 파라미터로 받도록 수정
     private void CreateCookie(Vector2 spawnPos)
     {
         GameObject prefab = null;
@@ -65,18 +64,22 @@ public class CookieShapeManager : MonoBehaviour
         if (Shape2D.isCircle)
         {
             prefab = circleCookiePrefab;
+            CheckItemManager.Instance.UseItem(ItemName.Circle);
         }
         else if (Shape2D.isHeart)
         {
             prefab = heartCookiePrefab;
+            CheckItemManager.Instance.UseItem(ItemName.Heart);
         }
         else if (Shape2D.isStar)
         {
             prefab = starCookiePrefab;
+            CheckItemManager.Instance.UseItem(ItemName.Star);
         }
         else if (Shape2D.isCookieMan)
         {
             prefab = cookieManPrefab;
+            CheckItemManager.Instance.UseItem(ItemName.CookieMan);
         }
 
         if (prefab != null)
@@ -84,20 +87,21 @@ public class CookieShapeManager : MonoBehaviour
             Instantiate(prefab, spawnPos, Quaternion.identity);
         }
 
-        // 모양 선택 해제
+        // 선택된 모양 초기화
         Shape2D.isCircle = false;
         Shape2D.isHeart = false;
         Shape2D.isStar = false;
         Shape2D.isCookieMan = false;
 
         cookieCount++;
-        if (cookieCount >= 1)
+        if (cookieCount >= 4)
         {
             nextButton.SetActive(true);
             itemPick.gameObject.SetActive(false);
         }
     }
 
+    // 쿠키틀들을 보여주는 함수
     public void CookieCutterShow()
     {
         Circle.SetActive(true);

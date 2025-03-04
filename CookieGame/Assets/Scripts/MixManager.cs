@@ -9,11 +9,11 @@ public class MixManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Bowl2D bowl;              // Bowl 스크립트 (충돌 감지)
     [SerializeField] private ItemPickManager itemPick; // 아이템 픽업 스크립트
-    [SerializeField] private TMP_Text requestText;     // 지시 사항 출력할 텍스트
     [SerializeField] private GameObject nextButton;    // 장면 전환 버튼
     [SerializeField] private float down = 1f;
     [SerializeField] private Slider slider;    // progressbar
     [SerializeField] private GameObject handMix;  // HandMix 오브젝트
+    [SerializeField] public bool isMixTime = true;
 
     [Header("Steps Settings")]
     [SerializeField] private List<MixStep> steps;    // 단계를 Inspector에서 세팅
@@ -26,11 +26,12 @@ public class MixManager : MonoBehaviour
     {
         if (steps != null && steps.Count > 0) // steps[0]에서 가져옴
         {
-            requestText.text = steps[currentStepIndex].instruction;
+
         }
 
         slider.value = 0f;
         slider.gameObject.SetActive(false);
+        isMixTime = true;
     }
 
     private void Update()
@@ -62,6 +63,10 @@ public class MixManager : MonoBehaviour
             if (CheckAllRequiredItems(step.requiredTags))
             {
                 DestroyItems(step.requiredTags.ToArray());  // Bowl 안에 있는 해당 태그 아이템들 파괴
+                if (itemPick != null)
+                {
+                    itemPick.CopyEnded();
+                }
                 GoToNextStep();
             }
         }
@@ -76,14 +81,13 @@ public class MixManager : MonoBehaviour
 
         if (currentStepIndex >= steps.Count) // 다음 단계 인덱스가 steps 범위를 벗어난 경우
         {
-            if (requestText) requestText.text = "";
             if (nextButton) nextButton.SetActive(true);
             if (itemPick) itemPick.gameObject.SetActive(true);
+            isMixTime = false;
             return;
         }
 
         var step = steps[currentStepIndex];
-        if (requestText) requestText.text = step.instruction;
 
         if (step.isMixStep)
         {
